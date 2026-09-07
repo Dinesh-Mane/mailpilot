@@ -71,7 +71,43 @@ function App() {
             {loading? <CircularProgress size={2}/> : "Generate Reply"}
           </Button>
 
+
       </Box>
+
+      {error && (
+        <Typography
+          color='error'
+          sx={{ mb:2 }}
+        >
+          {error}
+        </Typography>
+
+      )}
+
+      {generatedReply && (
+        <Box sx={{ mt:3 }}>
+          <Typography
+            variant='h6'
+            gutterBottom>
+              Generated Reply:
+          </Typography>
+          <TextField
+          fullWidth
+          multiline
+          rows={6}
+          variant='outlined'
+          value={generatedReply || ''}
+          inputProps={{readOnly: true}}
+          sx={{ mb:2 }}/>
+          <Button
+            variant='contained'
+            onClick={() => navigator.clipboard.writeText(generatedReply)}
+            fullWidth
+            sx={{ mb:2 }}>
+            Copy to Clipboard
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Typography, TextField, FormControl, InputLabel, Select, MenuItem, Button, CircularProgress } from '@mui/material';
+import axios from 'axios';
 import './App.css';
 
 function App() {
@@ -10,7 +11,19 @@ function App() {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-
+    setLoading(true)
+    setError('')
+    try {
+      const response = await axios.post("http://localhost:8080/api/email/generate", {
+        emailContent, tone
+      })
+      setGeneratedReply(typeof response.data == 'string' ? response.data : JSON.stringify(response.data));
+    } catch (error) {
+      setError('Failed to generate email reply');
+      console.error(error);
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -41,7 +54,7 @@ function App() {
         <TextField
           fullWidth
           multiline
-          rows={6}
+          rows={16}
           variant='outlined'
           label="Original Email Content"
           value={emailContent || ''}
@@ -94,7 +107,7 @@ function App() {
           <TextField
           fullWidth
           multiline
-          rows={6}
+          rows={15}
           variant='outlined'
           value={generatedReply || ''}
           inputProps={{readOnly: true}}
